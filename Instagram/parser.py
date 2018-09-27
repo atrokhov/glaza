@@ -1,4 +1,10 @@
 import requests
+from pymongo import MongoClient
+
+client = MongoClient('localhost', 27017)
+db = client.glaza
+
+instagram_users_data = db.instagram_users_data
 
 def get_user_data(username):
     url = "https://apinsta.herokuapp.com/u/" + username
@@ -14,11 +20,14 @@ def get_user_data(username):
                 media_urls.append("https://www.instagram.com/p/" + str(r['graphql']['user']['edge_owner_to_timeline_media']['edges'][i]['node']['shortcode']))
 
         user_data = {
+            'username':username,
             'media_urls': media_urls,
             'follows': follows,
             'followed_by': followed_by,
             'media_count': media_count
         }
+
+        instagram_users_data.insert_one(user_data)
 
         return user_data
     else:
