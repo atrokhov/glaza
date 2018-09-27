@@ -1,19 +1,25 @@
-from instagram.client import InstagramAPI
-from tokens import access_token, client_secret
+import requests
 
-class InstagrammData:
+def get_user_data(username):
+    url = "https://apinsta.herokuapp.com/u/" + username
+    r = requests.get(url).json()
+    if r:
+        media_urls = []
+        follows = r['graphql']['user']['edge_follow']['count']
+        followed_by = r['graphql']['user']['edge_followed_by']['count']
+        media_count = r['graphql']['user']['edge_owner_to_timeline_media']['count']
+        media = r['graphql']['user']['edge_owner_to_timeline_media']['edges']
+        if media:
+            for i in range(0, 3):
+                media_urls.append("https://www.instagram.com/p/" + str(r['graphql']['user']['edge_owner_to_timeline_media']['edges'][i]['node']['shortcode']))
 
-    def __init__(self, access_token, client_secret, user_id):
-        self.access_token = access_token
-        self.client_secret = client_secret
-        self.user_id = user_id
-        self.api = InstagramAPI(access_token=access_token, client_secret=client_secret)
+        user_data = {
+            'media_urls': media_urls,
+            'follows': follows,
+            'followed_by': followed_by,
+            'media_count': media_count
+        }
 
-    def user_follows(self):
-        return self.api.user(user_id=self.user_id).counts['follows']
-
-    def user_followed_by(self):
-        return self.api.user(user_id=self.user_id).counts['followed_by']
-
-    def user_recent_media(self):
-        return self.api.user_recent_media(user_id=self.user_id, count=3)
+        return user_data
+    else:
+        return
