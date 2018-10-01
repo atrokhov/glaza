@@ -32,6 +32,3 @@ def get_user_data(username):
 
 def user_info(username, db=instagram_users_data):
     db.insert_one(get_user_data(username))
-
-instagram_users_data.drop()
-print(get_user_data('helloworld7743'))
