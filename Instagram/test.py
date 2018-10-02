@@ -13,8 +13,8 @@ class TestParser(unittest.TestCase):
         self.assertEqual(get_user_data("helloworld7743"), result)
 
     def test_parser_with_another_user(self):
-        result = {'username': 'dawda', 'media_urls': [], 'follows': 1395, 'followed_by': 2793, 'media_count': 85}
-        self.assertEqual(get_user_data("dawda"), result)
+        result = {'username': '_yanita', 'media_urls': [], 'follows': 2, 'followed_by': 5, 'media_count': 0}
+        self.assertEqual(get_user_data("_yanita"), result)
 
     def test_inserting_to_db(self):
         test_instagram_users_data.drop()
